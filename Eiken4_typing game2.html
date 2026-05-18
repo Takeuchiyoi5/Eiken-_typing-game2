@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eiken 4th Grade Typing Challenge</title>
+    <title>Eiken 4th & 3rd Grade Typing Challenge</title>
     <style>
         :root {
             --bg-color: #fff0f5;       /* Milky Pink background */
@@ -217,11 +217,11 @@
 <div class="container">
     <div class="category-menu">
         <button class="nav-btn active" onclick="switchCategory('all', this)">全て (All)</button>
-        <button class="nav-btn" onclick="switchCategory('how', this)">How用法</button>
-        <button class="nav-btn" onclick="switchCategory('verbs', this)">現在・過去・s</button>
-        <button class="nav-btn" onclick="switchCategory('adj', this)">形容詞のみ</button>
+        <button class="nav-btn" onclick="switchCategory('how', this)">疑問詞・熟語</button>
+        <button class="nav-btn" onclick="switchCategory('verbs', this)">動詞（変化形）</button>
+        <button class="nav-btn" onclick="switchCategory('adj', this)">形容詞・副詞</button>
         <button class="nav-btn" onclick="switchCategory('noun', this)">名詞コーナー</button>
-        <button class="nav-btn" onclick="switchCategory('prep', this)">前置詞コーナー</button>
+        <button class="nav-btn" onclick="switchCategory('prep', this)">前置詞・その他</button>
         <button class="nav-btn" style="grid-column: span 2;" onclick="switchCategory('custom', this)">📥 自作カスタム単語</button>
     </div>
 
@@ -262,65 +262,135 @@
 
 <script>
     const baseVocabDb = [
-        { id: 1, word: "How much...?", meaning: "いくらですか", tag: "how" },
-        { id: 2, word: "How many...?", meaning: "いくつかの数", tag: "how" },
-        { id: 3, word: "How old...?", meaning: "何歳ですか", tag: "how" },
-        { id: 4, word: "How long...?", meaning: "どのくらいの長さ", tag: "how" },
-        { id: 5, word: "How tall...?", meaning: "どのくらいの背丈", tag: "how" },
-        { id: 6, word: "How often...?", meaning: "どのくらいの頻度", tag: "how" },
-        { id: 7, word: "How far...?", meaning: "どのくらいの距離", tag: "how" },
-        { id: 8, word: "How about...?", meaning: "～はいかがですか", tag: "how" },
-        { id: 9, word: "How to use", meaning: "使い方", tag: "how" },
+        // --- 疑問詞・熟語 (how) ---
+        { id: 1, word: "How much...?", meaning: "いくらですか【4級】", tag: "how" },
+        { id: 2, word: "How many...?", meaning: "いくつの【4級】", tag: "how" },
+        { id: 3, word: "How old...?", meaning: "何歳ですか【4級】", tag: "how" },
+        { id: 4, word: "How long...?", meaning: "どのくらいの長さ【4級】", tag: "how" },
+        { id: 5, word: "How tall...?", meaning: "どのくらいの背丈【4級】", tag: "how" },
+        { id: 6, word: "How often...?", meaning: "どのくらいの頻度【4級】", tag: "how" },
+        { id: 7, word: "How far...?", meaning: "どのくらいの距離【4級】", tag: "how" },
+        { id: 8, word: "How about...?", meaning: "～はいかがですか【4級】", tag: "how" },
+        { id: 9, word: "How to use", meaning: "使い方【4級】", tag: "how" },
+        { id: 101, word: "look for", meaning: "～を探す【4級】", tag: "how" },
+        { id: 102, word: "take care of", meaning: "～の世話をする【3級】", tag: "how" },
+        { id: 103, word: "look forward to", meaning: "～を楽しみに待つ【3級】", tag: "how" },
+        { id: 104, word: "arrive at", meaning: "～に到着する【3級】", tag: "how" },
+        { id: 105, word: "by the way", meaning: "ところで【3級】", tag: "how" },
+        { id: 106, word: "shake hands", meaning: "握手する【3級】", tag: "how" },
+        { id: 107, word: "all over the world", meaning: "世界中で【3級】", tag: "how" },
+        { id: 108, word: "for a long time", meaning: "長い間【3級】", tag: "how" },
         
-        { id: 10, word: "go -> went", meaning: "行く -> 行った", tag: "verbs" },
-        { id: 11, word: "come -> came", meaning: "来る -> 来た", tag: "verbs" },
-        { id: 12, word: "have -> had", meaning: "持っている -> 持っていた", tag: "verbs" },
-        { id: 13, word: "make -> made", meaning: "作る -> 作った", tag: "verbs" },
-        { id: 14, word: "take -> took", meaning: "取る -> 取った", tag: "verbs" },
-        { id: 15, word: "see -> saw", meaning: "見る -> 見た", tag: "verbs" },
-        { id: 16, word: "buy -> bought", meaning: "買う -> 買った", tag: "verbs" },
-        { id: 17, word: "eat -> ate", meaning: "食べる -> 食べた", tag: "verbs" },
-        { id: 18, word: "run -> ran", meaning: "走る -> 走った", tag: "verbs" },
-        { id: 19, word: "say -> said", meaning: "言う -> 言った", tag: "verbs" },
-        { id: 30, word: "read -> read", meaning: "読む -> 読んだ", tag: "verbs" },
-        { id: 31, word: "write -> wrote", meaning: "書く -> 書いた", tag: "verbs" },
-        { id: 32, word: "speak -> spoke", meaning: "話す -> 話した", tag: "verbs" },
-        { id: 33, word: "know -> knew", meaning: "知っている -> 知っていた", tag: "verbs" },
-        { id: 34, word: "play -> plays", meaning: "（sが付く形）遊ぶ", tag: "verbs" },
-        { id: 35, word: "study -> studies", meaning: "（iesになる形）勉強する", tag: "verbs" },
-        { id: 36, word: "watch -> watches", meaning: "（esが付く形）見る", tag: "verbs" },
-        { id: 37, word: "have -> has", meaning: "（不規則に変わる形）持っている", tag: "verbs" },
-        { id: 38, word: "do -> does", meaning: "（esが付く形）する", tag: "verbs" },
-        { id: 39, word: "wash -> washes", meaning: "（esが付く形）洗う", tag: "verbs" },
+        // --- 動詞（変化形含む） (verbs) ---
+        { id: 10, word: "go -> went", meaning: "行く -> 行った【4級】", tag: "verbs" },
+        { id: 11, word: "come -> came", meaning: "来る -> 来た【4級】", tag: "verbs" },
+        { id: 12, word: "have -> had", meaning: "持っている -> 持っていた【4級】", tag: "verbs" },
+        { id: 13, word: "make -> made", meaning: "作る -> 作った【4級】", tag: "verbs" },
+        { id: 14, word: "take -> took", meaning: "取る -> 取った【4級】", tag: "verbs" },
+        { id: 15, word: "see -> saw", meaning: "見る -> 見た【4級】", tag: "verbs" },
+        { id: 16, word: "buy -> bought", meaning: "買う -> 買った【4級】", tag: "verbs" },
+        { id: 17, word: "eat -> ate", meaning: "食べる -> 食べた【4級】", tag: "verbs" },
+        { id: 18, word: "run -> ran", meaning: "走る -> 走った【4級】", tag: "verbs" },
+        { id: 19, word: "say -> said", meaning: "言う -> 言った【4級】", tag: "verbs" },
+        { id: 30, word: "read -> read", meaning: "読む -> 読んだ【4級】", tag: "verbs" },
+        { id: 31, word: "write -> wrote", meaning: "書く -> 書いた【4級】", tag: "verbs" },
+        { id: 32, word: "speak -> spoke", meaning: "話した【4級】", tag: "verbs" },
+        { id: 33, word: "know -> knew", meaning: "知っていた【4級】", tag: "verbs" },
+        { id: 34, word: "play -> plays", meaning: "（s形）遊ぶ【4級】", tag: "verbs" },
+        { id: 35, word: "study -> studies", meaning: "（ies形）勉強する【4級】", tag: "verbs" },
+        { id: 36, word: "watch -> watches", meaning: "（es形）見る【4級】", tag: "verbs" },
+        { id: 37, word: "have -> has", meaning: "（不規則形）持っている【4級】", tag: "verbs" },
+        { id: 38, word: "do -> does", meaning: "（es形）する【4級】", tag: "verbs" },
+        { id: 39, word: "wash -> washes", meaning: "（es形）洗う【4級】", tag: "verbs" },
+        { id: 201, word: "understand", meaning: "理解する【3級】", tag: "verbs" },
+        { id: 202, word: "become -> became", meaning: "～になる -> なった【3級】", tag: "verbs" },
+        { id: 203, word: "bring -> brought", meaning: "持ってくる -> 持ってきた【3級】", tag: "verbs" },
+        { id: 204, word: "catch -> caught", meaning: "捕まえる -> 捕まえた【3級】", tag: "verbs" },
+        { id: 205, word: "find -> found", meaning: "見つける -> 見つけた【3級】", tag: "verbs" },
+        { id: 206, word: "forget -> forgot", meaning: "忘れる -> 忘れた【3級】", tag: "verbs" },
+        { id: 207, word: "leave -> left", meaning: "出発する・残す -> 去った【3級】", tag: "verbs" },
+        { id: 208, word: "meet -> met", meaning: "会う -> 会った【3級】", tag: "verbs" },
+        { id: 209, word: "sing -> sang", meaning: "歌う -> 歌った【3級】", tag: "verbs" },
+        { id: 210, word: "think -> thought", meaning: "考える -> 考えた【3級】", tag: "verbs" },
+        { id: 211, word: "win -> won", meaning: "勝つ -> 勝った【3級】", tag: "verbs" },
+        { id: 212, word: "agree", meaning: "賛成する【3級】", tag: "verbs" },
+        { id: 213, word: "borrow", meaning: "（無料で）借りる【3級】", tag: "verbs" },
+        { id: 214, word: "discover", meaning: "発見する【3級】", tag: "verbs" },
+        { id: 215, word: "explain", meaning: "説明する【3級】", tag: "verbs" },
+        { id: 216, word: "improve", meaning: "向上させる・改善する【3級】", tag: "verbs" },
+        { id: 217, word: "receive", meaning: "受け取る【3級】", tag: "verbs" },
+        { id: 218, word: "remember", meaning: "覚えている・思い出す【3級】", tag: "verbs" },
 
-        { id: 20, word: "beautiful", meaning: "美しい", tag: "adj" },
-        { id: 21, word: "difficult", meaning: "難しい", tag: "adj" },
-        { id: 22, word: "famous", meaning: "有名な", tag: "adj" },
-        { id: 23, word: "favorite", meaning: "大好きな", tag: "adj" },
-        { id: 24, word: "interesting", meaning: "面白い", tag: "adj" },
-        { id: 25, word: "ready", meaning: "準備ができた", tag: "adj" },
-        { id: 26, word: "special", meaning: "特別な", tag: "adj" },
-        { id: 27, word: "useful", meaning: "役に立つ", tag: "adj" },
-        { id: 28, word: "excited", meaning: "ワクワクして", tag: "adj" },
-        { id: 29, word: "popular", meaning: "人気のある", tag: "adj" },
+        // --- 形容詞・副詞 (adj) ---
+        { id: 20, word: "beautiful", meaning: "美しい【4級】", tag: "adj" },
+        { id: 21, word: "difficult", meaning: "難しい【4級】", tag: "adj" },
+        { id: 22, word: "famous", meaning: "有名な【4級】", tag: "adj" },
+        { id: 23, word: "favorite", meaning: "大好きな【4級】", tag: "adj" },
+        { id: 24, word: "interesting", meaning: "面白い【4級】", tag: "adj" },
+        { id: 25, word: "ready", meaning: "準備ができた【4級】", tag: "adj" },
+        { id: 26, word: "special", meaning: "特別な【4級】", tag: "adj" },
+        { id: 27, word: "useful", meaning: "役に立つ【4級】", tag: "adj" },
+        { id: 28, word: "excited", meaning: "ワクワクして【4級】", tag: "adj" },
+        { id: 29, word: "popular", meaning: "人気のある【4級】", tag: "adj" },
+        { id: 301, word: "careful", meaning: "注意深い【3級】", tag: "adj" },
+        { id: 302, word: "comfortable", meaning: "快適な【3級】", tag: "adj" },
+        { id: 303, word: "dangerous", meaning: "危険な【3級】", tag: "adj" },
+        { id: 304, word: "expensive", meaning: "（値段が）高い【3級】", tag: "adj" },
+        { id: 305, word: "healthy", meaning: "健康的な【3級】", tag: "adj" },
+        { id: 306, word: "international", meaning: "国際的な【3級】", tag: "adj" },
+        { id: 307, word: "necessary", meaning: "必要な【3級】", tag: "adj" },
+        { id: 308, word: "perfect", meaning: "完璧な【3級】", tag: "adj" },
+        { id: 309, word: "strange", meaning: "奇妙な・見知らぬ【3級】", tag: "adj" },
+        { id: 310, word: "traditional", meaning: "伝統的な【3級】", tag: "adj" },
+        { id: 311, word: "already", meaning: "すでに・もう【3級】", tag: "adj" },
+        { id: 312, word: "carefully", meaning: "注意深く【3級】", tag: "adj" },
+        { id: 313, word: "easily", meaning: "簡単に【3級】", tag: "adj" },
+        { id: 314, word: "finally", meaning: "ついに・ようやく【3級】", tag: "adj" },
+        { id: 315, word: "probably", meaning: "おそらく【3級】", tag: "adj" },
 
-        { id: 40, word: "hospital", meaning: "病院", tag: "noun" },
-        { id: 41, word: "museum", meaning: "博物館", tag: "noun" },
-        { id: 42, word: "station", meaning: "駅", tag: "noun" },
-        { id: 43, word: "subject", meaning: "教科", tag: "noun" },
-        { id: 44, word: "future", meaning: "未来", tag: "noun" },
-        { id: 45, word: "hobby", meaning: "趣味", tag: "noun" },
-        { id: 46, word: "weather", meaning: "天気", tag: "noun" },
-        { id: 47, word: "concert", meaning: "音楽会", tag: "noun" },
+        // --- 名詞 (noun) ---
+        { id: 40, word: "hospital", meaning: "病院【4級】", tag: "noun" },
+        { id: 41, word: "museum", meaning: "博物館【4級】", tag: "noun" },
+        { id: 42, word: "station", meaning: "駅【4級】", tag: "noun" },
+        { id: 43, word: "subject", meaning: "教科【4級】", tag: "noun" },
+        { id: 44, word: "future", meaning: "未来【4級】", tag: "noun" },
+        { id: 45, word: "hobby", meaning: "趣味【4級】", tag: "noun" },
+        { id: 46, word: "weather", meaning: "天気【4級】", tag: "noun" },
+        { id: 47, word: "concert", meaning: "音楽会【4級】", tag: "noun" },
+        { id: 401, word: "activity", meaning: "活動【3級】", tag: "noun" },
+        { id: 402, word: "anniversary", meaning: "記念日【3級】", tag: "noun" },
+        { id: 403, word: "atmosphere", meaning: "雰囲気【3級】", tag: "noun" },
+        { id: 404, word: "century", meaning: "世紀（100年）【3級】", tag: "noun" },
+        { id: 405, word: "competition", meaning: "コンテスト・競技会【3級】", tag: "noun" },
+        { id: 406, word: "creature", meaning: "生き物【3級】", tag: "noun" },
+        { id: 407, word: "custom", meaning: "習慣・税関【3級】", tag: "noun" },
+        { id: 408, word: "environment", meaning: "環境【3級】", tag: "noun" },
+        { id: 409, word: "government", meaning: "政府【3級】", tag: "noun" },
+        { id: 410, word: "interview", meaning: "面接・会見【3級】", tag: "noun" },
+        { id: 411, word: "journey", meaning: "（長旅の）旅行【3級】", tag: "noun" },
+        { id: 412, word: "knowledge", meaning: "知識【3級】", tag: "noun" },
+        { id: 413, word: "opportunity", meaning: "機会・チャンス【3級】", tag: "noun" },
+        { id: 414, word: "passenger", meaning: "乗客【3級】", tag: "noun" },
+        { id: 415, word: "schedule", meaning: "予定・スケジュール【3級】", tag: "noun" },
+        { id: 416, word: "tournament", meaning: "トーナメント・大会【3級】", tag: "noun" },
+        { id: 417, word: "volunteer", meaning: "ボランティア【3級】", tag: "noun" },
 
-        { id: 50, word: "under", meaning: "～の下に", tag: "prep" },
-        { id: 51, word: "between", meaning: "（2つの）間に", tag: "prep" },
-        { id: 52, word: "during", meaning: "～の間中に", tag: "prep" },
-        { id: 53, word: "before", meaning: "～の前に", tag: "prep" },
-        { id: 54, word: "after", meaning: "～の後に", tag: "prep" },
-        { id: 55, word: "through", meaning: "～を通り抜けて", tag: "prep" },
-        { id: 56, word: "against", meaning: "～に反対して", tag: "prep" },
-        { id: 57, word: "without", meaning: "～なしで", tag: "prep" }
+        // --- 前置詞・その他 (prep) ---
+        { id: 50, word: "under", meaning: "～の下に【4級】", tag: "prep" },
+        { id: 51, word: "between", meaning: "（2つの）間に【4級】", tag: "prep" },
+        { id: 52, word: "during", meaning: "～の間中に【4級】", tag: "prep" },
+        { id: 53, word: "before", meaning: "～の前に【4級】", tag: "prep" },
+        { id: 54, word: "after", meaning: "～の後に【4級】", tag: "prep" },
+        { id: 55, word: "through", meaning: "～を通り抜けて【4級】", tag: "prep" },
+        { id: 56, word: "against", meaning: "～に反対して【4級】", tag: "prep" },
+        { id: 57, word: "without", meaning: "～なしで【4級】", tag: "prep" },
+        { id: 501, word: "against", meaning: "～に反対して・寄りかかって【3級】", tag: "prep" },
+        { id: 502, word: "among", meaning: "（3つ以上の）間に【3級】", tag: "prep" },
+        { id: 503, word: "behind", meaning: "～の後ろに【3級】", tag: "prep" },
+        { id: 504, word: "beyond", meaning: "～を越えて【3級】", tag: "prep" },
+        { id: 505, word: "toward", meaning: "～の方へ【3級】", tag: "prep" },
+        { id: 506, word: "although", meaning: "～だけれども【3級】", tag: "prep" },
+        { id: 507, word: "whether", meaning: "～かどうか【3級】", tag: "prep" }
     ];
 
     let masterVocabDb = [];
