@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eiken 4th Grade Rhythmic Typing Challenge</title>
+    <style>
+        :root {
+            --bg-color: #fff0f5;       /* Milky Pink background */
+            --card-bg: #ffffff;        /* White card surface */
+            --text-main: #5c4d66;      /* Chocolate brown text */
+            --accent: #ff7ebb;         /* Strawberry pink accent */
+            --shuffle-color: #ba8fff;  /* Sweet lavender */
+            --btn-inactive: #e8dff5;   /* Pastel purple buttons */
+            --success-color: #6ee7b7;  /* Mint green */
+            --typed-color: #10b981;    /* Correctly typed letter color */
+            --untyped-color: #4da6ff;  /* Remaining letter color (Soda blue) */
+            --error-color: #ff5252;    /* Wrong key flash color */
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        .container {
+            text-align: center;
+            background: var(--card-bg);
+            padding: 2.5rem 1.5rem;
+            border-radius: 2rem; 
+            box-shadow: 0 15px 30px rgba(255, 182, 193, 0.4); 
+            width: 100%;
+            max-width: 480px;
+            border: 3px solid #ffe3ec; 
+        }
+        .category-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .nav-btn {
+            background-color: var(--btn-inactive);
+            color: #7d6b8d;
+            border: none;
+            padding: 0.6rem 0.4rem;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 0.75rem; 
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .nav-btn.active {
+            background-color: var(--accent);
+            color: white;
+            box-shadow: 0 4px 10px rgba(255, 126, 187, 0.3);
+        }
+        .shuffle-panel {
+            margin-bottom: 1rem;
+        }
+        .shuffle-btn {
+            background-color: var(--btn-inactive);
+            color: #7d6b8d;
+            border: none;
+            width: 100%;
+            padding: 0.6rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 0.75rem;
+            cursor: pointer;
+        }
+        .shuffle-btn.active {
+            background-color: var(--shuffle-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(186, 143, 255, 0.3);
+        }
+        #word-display {
+            font-size: 2.8rem;
+            font-weight: 800;
+            min-height: 5.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.2rem;
+            line-height: 1.1;
+            letter-spacing: 2px;
+            white-space: pre-wrap;
+        }
+        .char-correct {
+            color: var(--typed-color);
+            text-shadow: 0 0 5px rgba(16, 185, 129, 0.3);
+        }
+        .char-current {
+            color: var(--untyped-color);
+            border-bottom: 3px solid var(--accent); 
+            animation: pulse 1s infinite alternate;
+        }
+        .char-error {
+            color: var(--error-color);
+            border-bottom: 3px solid var(--error-color);
+            text-shadow: 0 0 5px rgba(255, 82, 82, 0.5);
+        }
+        .char-remaining {
+            color: #cbd5e1; 
+        }
+        #meaning-display {
+            font-size: 1.5rem;
+            color: #8c7b99;
+            min-height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
+        .main-action {
+            background-color: var(--accent); 
+            color: white;
+            border: none;
+            padding: 1.1rem 3rem;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border-radius: 9999px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 6px 15px rgba(255, 126, 187, 0.4);
+            letter-spacing: 2px;
+        }
+        .main-action.playing {
+            background-color: #ff5252 !important; 
+            box-shadow: 0 6px 15px rgba(255, 82, 82, 0.4) !important;
+        }
+        .score-banner {
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #6b5b95;
+            display: flex;
+            justify-content: space-around;
+        }
+        .mastery-panel {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 0.5rem;
+        }
+        .mastery-btn {
+            background-color: #f0ebf4;
+            color: #7d6b8d;
+            border: none;
+            padding: 0.6rem;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 0.75rem;
+            cursor: pointer;
+        }
+        .custom-entry-box {
+            margin-top: 1.8rem;
+            padding-top: 1.5rem;
+            border-top: 2px dashed #ffe3ec; 
+            text-align: left;
+        }
+        .custom-entry-box h3 {
+            font-size: 1rem;
+            color: var(--accent);
+            margin: 0 0 0.75rem 0;
+        }
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .input-group input {
+            background: #fffcfd;
+            border: 2px solid #ffe3ec;
+            color: var(--text-main);
+            padding: 0.6rem;
+            border-radius: 0.6rem;
+            font-size: 0.85rem;
+            flex: 1;
+        }
+        .add-word-btn {
+            background-color: var(--shuffle-color);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 0.6rem;
+            font-weight: bold;
+            border-radius: 0.6rem;
+            cursor: pointer;
+        }
+        .controls {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #b3a1bf;
+            font-weight: bold;
+        }
+        input[type="range"] {
+            accent-color: var(--accent);
+        }
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="category-menu">
+        <button class="nav-btn active" onclick="switchCategory('all', this)">全て (All)</button>
+        <button class="nav-btn" onclick="switchCategory('how', this)">How用法</button>
+        <button class="nav-btn" onclick="switchCategory('verbs', this)">現在・過去・s</button>
+        <button class="nav-btn" onclick="switchCategory('adj', this)">形容詞のみ</button>
+        <button class="nav-btn" onclick="switchCategory('noun', this)">名詞コーナー</button>
+        <button class="nav-btn" onclick="switchCategory('prep', this)">前置詞コーナー</button>
+        <button class="nav-btn" style="grid-column: span 2;" onclick="switchCategory('custom', this)">📥 自作カスタム単語</button>
+    </div>
+
+    <div class="shuffle-panel">
+        <button id="shuffle-btn" class="shuffle-btn" onclick="toggleShuffle()">🔀 シャッフル：OFF</button>
+    </div>
+
+    <div id="word-display">Ready?</div>
+    <div id="meaning-display">Press Start</div>
+    
+    <button id="action-btn" class="main-action" onclick="toggleApp()">START GAME</button>
+    
+    <div class="score-banner">
+        <div>⭐ Score: <span id="score-val">0</span></div>
+        <div>🎯 Combo: <span id="combo-val">0</span></div>
+    </div>
+
+    <div class="mastery-panel">
+        <button class="mastery-btn" style="background-color: var(--success-color); color: #155e75;" onclick="markAsMastered()">💖 覚えた！隠す</button>
+        <button class="mastery-btn" style="background-color: #fee2e2; color: #991b1b; font-size:0.75rem;" onclick="resetLocalStorage()">🔄 全初期化</button>
+    </div>
+
+    <div class="custom-entry-box">
+        <h3>✨ 自分でオリジナル単語を追加</h3>
+        <div class="input-group">
+            <input type="text" id="custom-word" placeholder="例: play → plays">
+            <input type="text" id="custom-meaning" placeholder="例: 遊ぶ → 遊んだ">
+        </div>
+        <button class="add-word-btn" onclick="addCustomWord()">単語を追加保存する</button>
+    </div>
+
+    <div class="controls">
+        BGM Volume: <input type="range" id="volume" min="0" max="0.5" step="0.05" value="0.2">
+    </div>
+</div>
+
+<audio id="bg-beat" loop src="Pop_swing.mp3" style="display:none;"></audio>
+<script>
+    const beatInterval = 2000; 
+    
+    const baseVocabDb = [
+        { id: 1, word: "How much...?", meaning: "いくらですか", tag: "how" },
+        { id: 2, word: "How many...?", meaning: "いくつかの数", tag: "how" },
+        { id: 3, word: "How old...?", meaning: "何歳ですか", tag: "how" },
+        { id: 4, word: "How long...?", meaning: "どのくらいの長さ", tag: "how" },
+        { id: 5, word: "How tall...?", meaning: "どのくらいの背丈", tag: "how" },
+        { id: 6, word: "How often...?", meaning: "どのくらいの頻度", tag: "how" },
+        { id: 7, word: "How far...?", meaning: "どのくらいの距離", tag: "how" },
+        { id: 8, word: "How about...?", meaning: "～はいかがですか", tag: "how" },
+        { id: 9, word: "How to use", meaning: "使い方", tag: "how" },
+        
+        { id: 10, word: "go → went", meaning: "行く → 行った", tag: "verbs" },
+        { id: 11, word: "come → came", meaning: "来る → 来た", tag: "verbs" },
+        { id: 12, word: "have → had", meaning: "持っている → 持っていた", tag: "verbs" },
+        { id: 13, word: "make → made", meaning: "作る → 作った", tag: "verbs" },
+        { id: 14, word: "take → took", meaning: "取る → 取った", tag: "verbs" },
+        { id: 15, word: "see → saw", meaning: "見る → 見た", tag: "verbs" },
+        { id: 16, word: "buy → bought", meaning: "買う → 買った", tag: "verbs" },
+        { id: 17, word: "eat → ate", meaning: "食べる → 食べた", tag: "verbs" },
+        { id: 18, word: "run → ran", meaning: "走る → 走った", tag: "verbs" },
+        { id: 19, word: "say → said", meaning: "言う → 言った", tag: "verbs" },
+        { id: 30, word: "read → read", meaning: "読む → 読んだ", tag: "verbs" },
+        { id: 31, word: "write → wrote", meaning: "書く → 書いた", tag: "verbs" },
+        { id: 32, word: "speak → spoke", meaning: "話す → 話した", tag: "verbs" },
+        { id: 33, word: "know → knew", meaning: "知っている → 知っていた", tag: "verbs" },
+        { id: 34, word: "play → plays", meaning: "（sが付く形）遊ぶ", tag: "verbs" },
+        { id: 35, word: "study → studies", meaning: "（iesになる形）勉強する", tag: "verbs" },
+        { id: 36, word: "watch → watches", meaning: "（esが付く形）見る", tag: "verbs" },
+        { id: 37, word: "have → has", meaning: "（不規則に変わる形）持っている", tag: "verbs" },
+        { id: 38, word: "do → does", meaning: "（esが付く形）する", tag: "verbs" },
+        { id: 39, word: "wash → washes", meaning: "（esが付く形）洗う", tag: "verbs" },
+
+        { id: 20, word: "beautiful", meaning: "美しい", tag: "adj" },
+        { id: 21, word: "difficult", meaning: "難しい", tag: "adj" },
+        { id: 22, word: "famous", meaning: "有名な", tag: "adj" },
+        { id: 23, word: "favorite", meaning: "大好きな", tag: "adj" },
+        { id: 24, word: "interesting", meaning: "面白い", tag: "adj" },
+        { id: 25, word: "ready", meaning: "準備ができた", tag: "adj" },
+        { id: 26, word: "special", meaning: "特別な", tag: "adj" },
+        { id: 27, word: "useful", meaning: "役に立つ", tag: "adj" },
+        { id: 28, word: "excited", meaning: "ワクワクして", tag: "adj" },
+        { id: 29, word: "popular", meaning: "人気のある", tag: "adj" },
+
+        { id: 40, word: "hospital", meaning: "病院", tag: "noun" },
+        { id: 41, word: "museum", meaning: "博物館", tag: "noun" },
+        { id: 42, word: "station", meaning: "駅", tag: "noun" },
+        { id: 43, word: "subject", meaning: "教科", tag: "noun" },
+        { id: 44, word: "future", meaning: "未来", tag: "noun" },
+        { id: 45, word: "hobby", meaning: "趣味", tag: "noun" },
+        { id: 46, word: "weather", meaning: "天気", tag: "noun" },
+        { id: 47, word: "concert", meaning: "音楽会", tag: "noun" },
+
+        { id: 50, word: "under", meaning: "～の下に", tag: "prep" },
+        { id: 51, word: "between", meaning: "（2つの）間に", tag: "prep" },
+        { id: 52, word: "during", meaning: "～の間中に", tag: "prep" },
+        { id: 53, word: "before", meaning: "～の前に", tag: "prep" },
+        { id: 54, word: "after", meaning: "～の後に", tag: "prep" },
+        { id: 55, word: "through", meaning: "～を通り抜けて", tag: "prep" },
+        { id: 56, word: "against", meaning: "～に反対して", tag: "prep" },
+        { id: 57, word: "without", meaning: "～なしで", tag: "prep" }
+    ];
+
+    let masterVocabDb = [];
+    let masteredIds = []; 
+    let currentPlaylist = [];
+    
+    let isPlaying = false;
+    let isShuffleOn = false;
+    let timerId = null;
+    let wordIndex = 0;
+    let step = 0; 
+    let activeCategory = 'all';
+
+    let gameScore = 0;
+    let gameCombo = 0;
+    let targetString = "";  
+    let typedIndex = 0;     
+    let isCurrentWordCleared = false; 
+    let hasError = false; 
+
+    let audioCtx = null;
+
+    const bgBeat = document.getElementById('bg-beat');
+    const wordDisplay = document.getElementById('word-display');
+    const meaningDisplay = document.getElementById('meaning-display');
+    const actionBtn = document.getElementById('action-btn');
+    const shuffleBtn = document.getElementById('shuffle-btn');
+    const volumeSlider = document.getElementById('volume');
+    const scoreVal = document.getElementById('score-val');
+    const comboVal = document.getElementById('combo-val');
+
+    volumeSlider.addEventListener('input', (e) => { bgBeat.volume = parseFloat(e.target.value); });
+    bgBeat.volume = volumeSlider.value;
+
+    function initAudioContext() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    }
+
+    function playKeySuccessSound() {
+        if (!audioCtx) return;
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime); 
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+    }
+
+    function playWordCompleteSound() {
+        if (!audioCtx) return;
+        let now = audioCtx.currentTime;
+        const tones = [523.25, 659.25, 783.99, 1046.50]; 
+        tones.forEach((freq, idx) => {
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(freq, now + (idx * 0.06));
+            gain.gain.setValueAtTime(0.15, now + (idx * 0.06));
+            gain.gain.exponentialRampToValueAtTime(0.01, now + (idx * 0.06) + 0.2);
+            osc.start(now + (idx * 0.06));
+            osc.stop(now + (idx * 0.06) + 0.25);
+        });
+    }
+
+    function loadSavedData() {
+        const savedMastered = localStorage.getItem('eiken4_masteredIds');
+        masteredIds = savedMastered ? JSON.parse(savedMastered) : [];
+        const savedCustomWords = localStorage.getItem('eiken4_customWords');
+        const customWords = savedCustomWords ? JSON.parse(savedCustomWords) : [];
+        masterVocabDb = [...baseVocabDb, ...customWords];
+    }
+
+    function saveProgress() {
+        localStorage.setItem('eiken4_masteredIds', JSON.stringify(masteredIds));
+    }
+
+    function resetLocalStorage() {
+        if(confirm("【警告】保存されたすべての進捗をリセットしますか？")) {
+            localStorage.removeItem('eiken4_masteredIds');
+            localStorage.removeItem('eiken4_customWords');
+            location.reload();
+        }
+    }
+
+    loadSavedData();
+    applyFilterAndShuffle();
+
+    function applyFilterAndShuffle() {
+        let baseList = masterVocabDb.filter(item => !masteredIds.includes(item.id));
+        if (activeCategory !== 'all') {
+            baseList = baseList.filter(item => item.tag === activeCategory);
+        }
+        currentPlaylist = [...baseList];
+
+        if (isShuffleOn) {
+            for (let i = currentPlaylist.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [currentPlaylist[i], currentPlaylist[j]] = [currentPlaylist[j], currentPlaylist[i]];
+            }
+        }
+    }
+
+    function switchCategory(categoryTag, element) {
+        if (isPlaying) stopLoop();
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        element.classList.add('active');
+        activeCategory = categoryTag;
+        applyFilterAndShuffle();
+        wordIndex = 0;
+        step = 0;
+        wordDisplay.innerHTML = "Ready?";
+        meaningDisplay.innerText = `Loaded ${currentPlaylist.length} items`;
+    }
+
+    function toggleShuffle() {
+        isShuffleOn = !isShuffleOn;
+        shuffleBtn.innerText = isShuffleOn ? "🔀 シャッフル：ON" : "🔀 シャッフル：OFF";
+        shuffleBtn.classList.toggle('active', isShuffleOn);
+        const currentlyPlaying = isPlaying;
+        if (currentlyPlaying) stopLoop();
+        applyFilterAndShuffle();
+        wordIndex = 0;
+        step = 0;
+        if (currentlyPlaying) startLoop();
+    }
+
+    function markAsMastered() {
+        if (currentPlaylist.length === 0) return;
+        const currentItem = currentPlaylist[wordIndex];
+        masteredIds.push(currentItem.id); 
+        saveProgress(); 
+        alert(`「${currentItem.word}」を覚えたリストに登録しました！`);
+        const currentlyPlaying = isPlaying;
+        if (currentlyPlaying) stopLoop();
+        applyFilterAndShuffle();
+        wordIndex = 0;
+        step = 0;
+        wordDisplay.innerHTML = "Saved!";
+        if (currentlyPlaying && currentPlaylist.length > 0) startLoop();
+    }
+
+    function addCustomWord() {
+        const wordInput = document.getElementById('custom-word');
+        const meaningInput = document.getElementById('custom-meaning');
+        if (!wordInput.value.trim() || !meaningInput.value.trim()) return;
+
+        const newEntry = {
+            id: Date.now(), 
+            word: wordInput.value.trim().toLowerCase(), 
+            meaning: meaningInput.value.trim(),
+            tag: "custom"
+        };
+
+        const savedCustomWords = localStorage.getItem('eiken4_customWords');
+        const customList = savedCustomWords ? JSON.parse(savedCustomWords) : [];
+        customList.push(newEntry);
+        localStorage.setItem('eiken4_customWords', JSON.stringify(customList));
+        
+        wordInput.value = '';
+        meaningInput.value = '';
+        loadSavedData(); 
+        if (activeCategory === 'custom' || activeCategory === 'all') applyFilterAndShuffle();
+    }
+
+    function toggleApp() {
+        if (isPlaying) { stopLoop(); } else { startLoop(); }
+    }
+
+    function startLoop() {
+        if (currentPlaylist.length === 0) return;
+        initAudioContext(); 
+        isPlaying = true;
+        actionBtn.innerText = "STOP GAME";
+        actionBtn.classList.add('playing');
+        
+        bgBeat.currentTime = 0;
+        bgBeat.play().catch(e => { stopLoop(); });
+        
+        step = 0;
+        gameScore = 0;
+        gameCombo = 0;
+        scoreVal.innerText = gameScore;
+        comboVal.innerText = gameCombo;
+        
+        window.addEventListener('keydown', handleTypingInput);
+        
+        resetBeatTimer();
+        processChantStep();
+    }
+
+    function stopLoop() {
+        isPlaying = false;
+        actionBtn.innerText = "START GAME";
+        actionBtn.classList.remove('playing');
+        bgBeat.pause();
+        bgBeat.currentTime = 0;
+        if (timerId) clearInterval(timerId);
+        window.removeEventListener('keydown', handleTypingInput);
+        window.speechSynthesis.cancel(); 
+        wordDisplay.innerHTML = "Ready?";
+        meaningDisplay.innerText = "Press Start";
+    }
+
+    function resetBeatTimer() {
+        if (timerId) clearInterval(timerId);
+        timerId = setInterval(processChantStep, beatInterval);
+    }
+
+    function renderTypingWord() {
+        let htmlStr = "";
+        for (let i = 0; i < targetString.length; i++) {
+            if (i < typedIndex) {
+                htmlStr += `<span class="char-correct">${targetString[i]}</span>`;
+            } else if (i === typedIndex) {
+                let cls = hasError ? "char-error" : "char-current";
+                if (targetString[i] === ' ' || targetString[i] === '→') {
+                    htmlStr += `<span class="${cls}" style="display: inline-block; min-width: 14px; border-bottom: 3px solid currentColor;">${targetString[i]}</span>`;
+                } else {
+                    htmlStr += `<span class="${cls}">${targetString[i]}</span>`;
+                }
+            } else {
+                htmlStr += `<span class="char-remaining">${targetString[i]}</span>`;
+            }
+        }
+        wordDisplay.innerHTML = htmlStr;
+    }
+
+    function checkAndSkipNonAlpha() {
+        const currentItem = currentPlaylist[wordIndex];
+        let skippable = ['→', '.', '?', '-'];
+        
+        if (activeCategory !== 'how' && (!currentItem || currentItem.tag !== 'how')) {
+            skippable.push(' ');
+        }
+
+        if (typedIndex < targetString.length && skippable.includes(targetString[typedIndex])) {
+            typedIndex++;
+            checkAndSkipNonAlpha(); 
+        }
+    }
+
+    function processChantStep() {
+        if (currentPlaylist.length === 0) { stopLoop(); return; }
+        const currentVocab = currentPlaylist[wordIndex];
+
+        // 【今回のコア修正】正しくタイプされるまで、ステップ1以降への進行をブロック
+        if ((step === 1 || step === 2 || step === 3) && !isCurrentWordCleared) {
+            return; // まだタイプし終わっていないので、タイマーによるステップ強制移行を無視
+        }
+
+        switch(step) {
+            case 0: 
+                targetString = currentVocab.word;
+                typedIndex = 0;
+                isCurrentWordCleared = false;
+                hasError = false; 
+                
+                checkAndSkipNonAlpha();
+                renderTypingWord();
+                meaningDisplay.innerText = "---";
+                speak(cleanTextForTTS(currentVocab.word), 'en-US');
+                step = 1;
+                break;
+            case 1: 
+                meaningDisplay.innerText = currentVocab.meaning;
+                speak(currentVocab.meaning, 'ja-JP');
+                step = 2;
+                break;
+            case 2: 
+                speak(cleanTextForTTS(currentVocab.word), 'en-US');
+                step = 3;
+                break;
+            case 3: 
+                // タイピングが完了した時のみ得点を加算して次へ進む
+                if (isCurrentWordCleared) {
+                    gameScore += 10 + Math.floor(gameCombo / 5);
+                    gameCombo += 1;
+                } else {
+                    gameCombo = 0;
+                }
+                scoreVal.innerText = gameScore;
+                comboVal.innerText = gameCombo;
+
+                wordDisplay.innerHTML = "<span style='color: var(--shuffle-color)'>• • •</span>";
+                meaningDisplay.innerText = "";
+                
+                wordIndex = (wordIndex + 1) % currentPlaylist.length;
+                step = 0;
+                break;
+        }
+    }
+
+    function handleTypingInput(e) {
+        if (e.key === ' ') {
+            e.preventDefault();
+        }
+
+        if (targetString === "" || isCurrentWordCleared) return; 
+        
+        let key = e.key;
+        checkAndSkipNonAlpha();
+        
+        if (typedIndex < targetString.length) {
+            if (key.toLowerCase() === targetString[typedIndex].toLowerCase() || 
+                (targetString[typedIndex] === ' ' && key === ' ')) {
+                
+                typedIndex++;
+                hasError = false; 
+                
+                checkAndSkipNonAlpha(); 
+                renderTypingWord();
+
+                // 最後の文字が正しく打たれた場合
+                if (typedIndex >= targetString.length) {
+                    isCurrentWordCleared = true;
+                    playWordCompleteSound(); 
+                    
+                    // 【今回のコア修正】打ち終わった瞬間、即座に次の単語へ進めるようにステップをセットして実行
+                    step = 3; 
+                    processChantStep();
+                    resetBeatTimer(); // タイマー周期をリフレッシュして次の単語へ
+                } else {
+                    playKeySuccessSound();   
+                }
+            } 
+            else if (key !== "Shift" && key !== "CapsLock" && key !== "Control" && key !== "Alt") {
+                hasError = true; 
+                renderTypingWord(); 
+            }
+        }
+    }
+
+    function cleanTextForTTS(rawText) {
+        return rawText.replace('→', ' changed to ').replace('...', '');
+    }
+
+    function speak(text, lang) {
+        window.speechSynthesis.cancel(); 
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        utterance.rate = 1.0; 
+        window.speechSynthesis.speak(utterance);
+    }
+</script>
+</body>
+</html>
